@@ -5,6 +5,8 @@ Nivel2::Nivel2()
     Escena->setBackgroundBrush(QImage("Recursos/Fondo.png"));
     Escena->setSceneRect(0,0,1,1);
 
+    Jugador = new jugador();
+
     Refresco = new QTimer();
     connect(Refresco, SIGNAL(timeout()), this, SLOT(Actualizar()));
     Refresco->start(16);

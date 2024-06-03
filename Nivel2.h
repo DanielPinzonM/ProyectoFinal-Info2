@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include "jugador.h"
 
 class Nivel2 : public QWidget
 {
@@ -16,6 +17,7 @@ private:
     QGraphicsScene* Escena = new QGraphicsScene;
     QSet<int> Keys;
     QTimer* Refresco;
+    jugador* Jugador;
 
 public:
     Nivel2();
