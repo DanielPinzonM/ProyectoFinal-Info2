@@ -6,6 +6,14 @@ Nivel2::Nivel2()
     Escena->setBackgroundBrush(QImage("Recursos/Fondo1.png"));
     Escena->setSceneRect(0,0,1,1);
 
+    for(int i=350; i<7000; i+=400)
+    {
+        Barricadas.append(new QGraphicsPixmapItem(QPixmap("Recursos/Barricada.png")));
+        Barricadas.last()->setScale(1);
+        Barricadas.last()->setPos(i, QRandomGenerator::global()->bounded(500, 585));
+        Escena->addItem(Barricadas.last());
+    }
+
     Jugador = new jugador();
 
     Escena->addItem(Jugador->GetImagen());
@@ -116,7 +124,7 @@ void Nivel2::Actualizar()
         }
         if(Keys.contains(Qt::Key_W))
         {
-            if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() > Escena->sceneRect().y()+585)
+            if(Jugador->GetPosicionY() > Escena->sceneRect().y()+500)
             {
                 Jugador->SetPosicion(Jugador->GetPosicionX()-1, Jugador->GetPosicionY()-1);
 
@@ -128,7 +136,7 @@ void Nivel2::Actualizar()
         }
         if(Keys.contains(Qt::Key_S))
         {
-            if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() < Escena->sceneRect().y()+652)
+            if(Jugador->GetPosicionY() < Escena->sceneRect().y()+575)
             {
                 Jugador->SetPosicion(Jugador->GetPosicionX()+1, Jugador->GetPosicionY()+1);
 
@@ -147,6 +155,26 @@ void Nivel2::Actualizar()
         }
     }
 
+    for(QGraphicsPixmapItem* Barricada : Barricadas)
+    {
+        if(Barricada->pos().x() < Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().width() && Barricada->pos().x()+Barricada->boundingRect().width()+20 > Jugador->GetPosicionX())
+        {
+            if(Barricada->pos().y() > Jugador->GetPosicionY())
+            {
+                if(Jugador->GetImagen()->zValue() != -1)
+                {
+                    Jugador->GetImagen()->setZValue(-1);
+                }
+            }
+            else
+            {
+                if(Jugador->GetImagen()->zValue() != 1)
+                {
+                    Jugador->GetImagen()->setZValue(1);
+                }
+            }
+        }
+    }
 
     if(Jugador->GetPosicionX() > Escena->sceneRect().x()+1000 && Escena->sceneRect().x() < 5768)
     {

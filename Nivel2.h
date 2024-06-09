@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QRandomGenerator>
 #include "jugador.h"
 
 class Nivel2 : public QWidget
@@ -20,6 +21,7 @@ private:
     QSet<int> Keys;
     QTimer* Refresco;
     jugador* Jugador;
+    QList<QGraphicsPixmapItem*> Barricadas;
 
 public:
     Nivel2();
