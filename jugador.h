@@ -6,8 +6,22 @@
 class jugador : public soldado
 {
     Q_OBJECT
+
+private:
+    bool MueveDerecha;
+    bool MueveIzquierda;
+
 public:
     jugador();
+    bool GetMueveDerecha();
+    bool GetMueveIzquierda();
+
+    void SeMueveDerecha();
+    void SeMueveIzquierda();
+    void NoMover();
+
+public slots:
+    void Animar();
 };
 
 #endif // JUGADOR_H
