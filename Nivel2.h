@@ -15,6 +15,8 @@ class Nivel2 : public QWidget
     Q_OBJECT
 private:
     QGraphicsScene* Escena = new QGraphicsScene;
+    short int ExtremoDerecho;
+    short int ExtremoIzquierdo;
     QSet<int> Keys;
     QTimer* Refresco;
     jugador* Jugador;

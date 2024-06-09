@@ -1,11 +1,18 @@
 #include "Nivel2.h"
+#include <QScrollArea>
 
 Nivel2::Nivel2()
 {
-    Escena->setBackgroundBrush(QImage("Recursos/Fondo.png"));
+    Escena->setBackgroundBrush(QImage("Recursos/Fondo1.png"));
     Escena->setSceneRect(0,0,1,1);
 
     Jugador = new jugador();
+
+    Escena->addItem(Jugador->GetImagen());
+    Jugador->SetPosicion(450,528);
+
+    ExtremoDerecho = 1100 - int(Jugador->GetImagen()->boundingRect().width());
+    ExtremoIzquierdo = 100;
 
     Refresco = new QTimer();
     connect(Refresco, SIGNAL(timeout()), this, SLOT(Actualizar()));
@@ -35,6 +42,22 @@ void Nivel2::AgregarTecla(QKeyEvent* event)
             Keys.insert(event->key());
         }
     }
+
+    if(event->key() == Qt::Key_W)
+    {
+        if(!event->isAutoRepeat())
+        {
+            Keys.insert(event->key());
+        }
+    }
+
+    if(event->key() == Qt::Key_S)
+    {
+        if(!event->isAutoRepeat())
+        {
+            Keys.insert(event->key());
+        }
+    }
 }
 
 void Nivel2::RemoverTecla(QKeyEvent* event)
@@ -53,6 +76,20 @@ void Nivel2::RemoverTecla(QKeyEvent* event)
             Keys.remove(event->key());
         }
     }
+    if(event->key() == Qt::Key_W)
+    {
+        if(!event->isAutoRepeat())
+        {
+            Keys.remove(event->key());
+        }
+    }
+    else if(event->key() == Qt::Key_S)
+    {
+        if(!event->isAutoRepeat())
+        {
+            Keys.remove(event->key());
+        }
+    }
 }
 
 void Nivel2::Actualizar()
@@ -61,11 +98,62 @@ void Nivel2::Actualizar()
     {
         if(Keys.contains(Qt::Key_D))
         {
-            Escena->setSceneRect(Escena->sceneRect().x()+4,0,1,1);
+            Jugador->SetPosicion(Jugador->GetPosicionX()+3, Jugador->GetPosicionY());
+
+            if(Jugador->GetMueveDerecha() == false)
+            {
+                Jugador->SeMueveDerecha();
+            }
         }
         if(Keys.contains(Qt::Key_A))
         {
-            Escena->setSceneRect(Escena->sceneRect().x()-4,0,1,1);
+            Jugador->SetPosicion(Jugador->GetPosicionX()-3, Jugador->GetPosicionY());
+
+            if(Jugador->GetMueveIzquierda() == false)
+            {
+                Jugador->SeMueveIzquierda();
+            }
         }
+        if(Keys.contains(Qt::Key_W))
+        {
+            if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() > Escena->sceneRect().y()+585)
+            {
+                Jugador->SetPosicion(Jugador->GetPosicionX()-1, Jugador->GetPosicionY()-1);
+
+                if(Jugador->GetMueveIzquierda() == false && Jugador->GetMueveDerecha() == false)
+                {
+                    Jugador->SeMueveIzquierda();
+                }
+            }
+        }
+        if(Keys.contains(Qt::Key_S))
+        {
+            if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() < Escena->sceneRect().y()+652)
+            {
+                Jugador->SetPosicion(Jugador->GetPosicionX()+1, Jugador->GetPosicionY()+1);
+
+                if(Jugador->GetMueveIzquierda() == false && Jugador->GetMueveDerecha() == false)
+                {
+                    Jugador->SeMueveDerecha();
+                }
+            }
+        }
+    }
+    else
+    {
+        if(Jugador->GetMueveDerecha() != false || Jugador->GetMueveIzquierda() != false)
+        {
+            Jugador->NoMover();
+        }
+    }
+
+
+    if(Jugador->GetPosicionX() > Escena->sceneRect().x()+1000 && Escena->sceneRect().x() < 5768)
+    {
+        Escena->setSceneRect(Escena->sceneRect().x()+3,0,1,1);
+    }
+    else if(Jugador->GetPosicionX() < Escena->sceneRect().x()+100 && Escena->sceneRect().x() > 100)
+    {
+        Escena->setSceneRect(Escena->sceneRect().x()-3,0,1,1);
     }
 }
