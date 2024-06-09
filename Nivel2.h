@@ -14,6 +14,7 @@
 class Nivel2 : public QWidget
 {
     Q_OBJECT
+
 private:
     QGraphicsScene* Escena = new QGraphicsScene;
     short int ExtremoDerecho;
@@ -22,6 +23,7 @@ private:
     QTimer* Refresco;
     jugador* Jugador;
     QList<QGraphicsPixmapItem*> Barricadas;
+    bool colision = false;
 
 public:
     Nivel2();

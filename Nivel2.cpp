@@ -10,7 +10,23 @@ Nivel2::Nivel2()
     {
         Barricadas.append(new QGraphicsPixmapItem(QPixmap("Recursos/Barricada.png")));
         Barricadas.last()->setScale(1);
-        Barricadas.last()->setPos(i, QRandomGenerator::global()->bounded(500, 585));
+        Barricadas.last()->setPos(i, QRandomGenerator::global()->bounded(510, 581));
+
+        if(Barricadas.last()->pos().y() > 575)
+        {
+            Escena->addItem(Barricadas.last());
+            Barricadas.append(new QGraphicsPixmapItem(QPixmap("Recursos/Barricada.png")));
+            Barricadas.last()->setScale(1);
+            Barricadas.last()->setPos(i+200, 515);
+        }
+        else if(Barricadas.last()->pos().y() < 515)
+        {
+            Escena->addItem(Barricadas.last());
+            Barricadas.append(new QGraphicsPixmapItem(QPixmap("Recursos/Barricada.png")));
+            Barricadas.last()->setScale(1);
+            Barricadas.last()->setPos(i+200, 575);
+        }
+
         Escena->addItem(Barricadas.last());
     }
 
@@ -159,7 +175,40 @@ void Nivel2::Actualizar()
     {
         if(Barricada->pos().x() < Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().width() && Barricada->pos().x()+Barricada->boundingRect().width()+20 > Jugador->GetPosicionX())
         {
-            if(Barricada->pos().y() > Jugador->GetPosicionY())
+            if(Jugador->GetMueveDerecha() == true)
+            {
+                if(Jugador->GetPosicionX()+20 > Barricada->pos().x() && Jugador->GetPosicionX()+20 < Barricada->pos().x()+Barricada->boundingRect().width())
+                {
+                    if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+60)
+                    {
+                        colision = true;
+                        Jugador->SetPosicion(Jugador->GetPosicionX()-3, Jugador->GetPosicionY());
+                        Jugador->GetImagen()->setZValue(1);
+                    }
+                    else
+                    {
+                        colision = false;
+                    }
+                }
+            }
+            else if(Jugador->GetMueveIzquierda() == true)
+            {
+                if(Jugador->GetPosicionX()+20 > Barricada->pos().x() && Jugador->GetPosicionX()+20 < Barricada->pos().x()+Barricada->boundingRect().width())
+                {
+                    if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+60)
+                    {
+                        colision = true;
+                        Jugador->SetPosicion(Jugador->GetPosicionX()+3, Jugador->GetPosicionY());
+                        Jugador->GetImagen()->setZValue(-1);
+                    }
+                    else
+                    {
+                        colision = false;
+                    }
+                }
+            }
+
+            if(Barricada->pos().y() > Jugador->GetPosicionY() && colision == false)
             {
                 if(Jugador->GetImagen()->zValue() != -1)
                 {
