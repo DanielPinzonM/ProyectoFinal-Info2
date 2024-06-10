@@ -1,6 +1,6 @@
 #include "avion.h"
 
-avion::avion(int ExtremoDerecho, int ExtremoIzquierdo)
+avion::avion(int ExtremoIzquierdo, int ExtremoDerecho)
 {
     Vida = 100;
 
@@ -12,17 +12,17 @@ avion::avion(int ExtremoDerecho, int ExtremoIzquierdo)
 
     if(PosicionLanzamiento == 1)
     {
-        Imagen->setPos(ExtremoDerecho+100, 200);
-        Imagen->setTransform(QTransform().translate(60, 0).scale(-1, 1), false);
+        Imagen->setPos(ExtremoDerecho+100, 50);
         DireccionPositiva = false;
     }
     else if(PosicionLanzamiento == 2)
     {
-        Imagen->setPos(200, ExtremoIzquierdo-100);
+        Imagen->setPos(ExtremoIzquierdo-100, 50);
+        Imagen->setTransform(QTransform().translate(60, 0).scale(-1, 1), false);
         DireccionPositiva = true;
     }
 
-    PosicionLanzamiento = QRandomGenerator::global()->bounded(ExtremoDerecho, ExtremoIzquierdo);
+    PosicionLanzamiento = QRandomGenerator::global()->bounded(ExtremoIzquierdo, ExtremoDerecho);
     BombaLanzada = false;
 
     TiempoMover = new QTimer();

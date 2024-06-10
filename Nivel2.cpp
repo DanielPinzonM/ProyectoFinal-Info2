@@ -38,6 +38,10 @@ Nivel2::Nivel2()
     ExtremoDerecho = 1100 - int(Jugador->GetImagen()->boundingRect().width());
     ExtremoIzquierdo = 100;
 
+    EsperaAvion = new QTimer();
+    connect(EsperaAvion, SIGNAL(timeout()), this, SLOT(GenerarAvion()));
+    EsperaAvion->start(5000);
+
     Refresco = new QTimer();
     connect(Refresco, SIGNAL(timeout()), this, SLOT(Actualizar()));
     Refresco->start(16);
@@ -229,8 +233,14 @@ void Nivel2::Actualizar()
     {
         Escena->setSceneRect(Escena->sceneRect().x()+3,0,1,1);
     }
-    else if(Jugador->GetPosicionX() < Escena->sceneRect().x()+100 && Escena->sceneRect().x() > 100)
+    else if(Jugador->GetPosicionX() < Escena->sceneRect().x()+200 && Escena->sceneRect().x() > 100)
     {
         Escena->setSceneRect(Escena->sceneRect().x()-3,0,1,1);
     }
+}
+
+void Nivel2::GenerarAvion()
+{
+    Aviones.append(new avion(0, 1200));
+    Escena->addItem(Aviones.last()->GetImagen());
 }

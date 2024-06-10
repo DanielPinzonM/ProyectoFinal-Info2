@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QRandomGenerator>
 #include "jugador.h"
+#include "avion.h"
 
 class Nivel2 : public QWidget
 {
@@ -20,8 +21,10 @@ private:
     short int ExtremoDerecho;
     short int ExtremoIzquierdo;
     QSet<int> Keys;
-    QTimer* Refresco;
     jugador* Jugador;
+    QTimer* Refresco;
+    QTimer* EsperaAvion;
+    QList<avion*> Aviones;
     QList<QGraphicsPixmapItem*> Barricadas;
     bool colision = false;
 
@@ -34,6 +37,7 @@ public:
 
 public slots:
     void Actualizar();
+    void GenerarAvion();
 };
 
 #endif // NIVEL2_H

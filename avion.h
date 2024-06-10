@@ -19,7 +19,7 @@ private:
     bool DireccionPositiva;
 
 public:
-    avion(int ExtremoDerecho, int ExtremoIzquierdo);
+    avion(int ExtremoIzquierdo, int ExtremoDerecho);
 
     short int GetVida();
     QGraphicsPixmapItem* GetImagen();
