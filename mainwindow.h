@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include "nivel1.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,5 +20,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Nivel1 *nivel;
+
+public slots:
+    void keyPressEvent(QKeyEvent* e);
 };
 #endif // MAINWINDOW_H
+
