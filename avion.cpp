@@ -40,26 +40,39 @@ QGraphicsPixmapItem* avion::GetImagen()
     return Imagen;
 }
 
+bool avion::GetDireccionPositiva()
+{
+    return DireccionPositiva;
+}
+
 void avion::Mover()
 {
     if(DireccionPositiva == true)
     {
-        Imagen->setPos(Imagen->pos().x()+5, Imagen->pos().y());
+        Imagen->setPos(Imagen->pos().x()+6, Imagen->pos().y());
 
         if(BombaLanzada == false && Imagen->pos().x() >= PosicionLanzamiento)
         {
-            qDebug() << "Lanzamiento";
+            emit Lanzamiento(Imagen->pos().x()-40, Imagen->pos().y(), DireccionPositiva);
             BombaLanzada = true;
         }
     }
     else
     {
-        Imagen->setPos(Imagen->pos().x()-5, Imagen->pos().y());
+        Imagen->setPos(Imagen->pos().x()-6, Imagen->pos().y());
 
         if(BombaLanzada == false && Imagen->pos().x() <= PosicionLanzamiento)
         {
-           qDebug() << "Lanzamiento";
-           BombaLanzada = true;
+            emit Lanzamiento(Imagen->pos().x()+40, Imagen->pos().y(), DireccionPositiva);
+            BombaLanzada = true;
         }
     }
+}
+
+avion::~avion()
+{
+    TiempoMover->stop();
+    TiempoMover->disconnect(TiempoMover, SIGNAL(timeout()), this, SLOT(Mover()));
+    TiempoMover->deleteLater();
+    this->deleteLater();
 }

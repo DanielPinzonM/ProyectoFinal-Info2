@@ -229,6 +229,30 @@ void Nivel2::Actualizar()
         }
     }
 
+    for(avion* Avion : Aviones)
+    {
+        if(Avion->GetDireccionPositiva() == true)
+        {
+            if(Avion->GetImagen()->pos().x() > Escena->sceneRect().x()+1300)
+            {
+                Escena->removeItem(Avion->GetImagen());
+                Aviones.removeOne(Avion);
+                Avion->disconnect(Avion, SIGNAL(Lanzamiento(int,int,bool)), this, SLOT(LanzarBomba(int,int,bool)));
+                Avion->~avion();
+            }
+        }
+        else
+        {
+            if(Avion->GetImagen()->pos().x() < Escena->sceneRect().x()-100)
+            {
+                Escena->removeItem(Avion->GetImagen());
+                Aviones.removeOne(Avion);
+                Avion->disconnect(Avion, SIGNAL(Lanzamiento(int,int,bool)), this, SLOT(LanzarBomba(int,int,bool)));
+                Avion->~avion();
+            }
+        }
+    }
+
     if(Jugador->GetPosicionX() > Escena->sceneRect().x()+1000 && Escena->sceneRect().x() < 5768)
     {
         Escena->setSceneRect(Escena->sceneRect().x()+3,0,1,1);
@@ -241,6 +265,19 @@ void Nivel2::Actualizar()
 
 void Nivel2::GenerarAvion()
 {
-    Aviones.append(new avion(0, 1200));
+    Aviones.append(new avion(Escena->sceneRect().x(), Escena->sceneRect().x()+1200));
     Escena->addItem(Aviones.last()->GetImagen());
+    connect(Aviones.last(), SIGNAL(Lanzamiento(int,int,bool)), this, SLOT(LanzarBomba(int,int,bool)));
+}
+
+void Nivel2::LanzarBomba(int x, int y, bool MPositivo)
+{
+    if(MPositivo == true)
+    {
+        qDebug() << "Lanzamiento en X=" << x << " - Y=" << y << " con movimiento positivo";
+    }
+    else
+    {
+        qDebug() << "Lanzamiento en X=" << x << " - Y=" << y << " con movimiento negativo";
+    }
 }

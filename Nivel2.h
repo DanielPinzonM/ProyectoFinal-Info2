@@ -38,6 +38,7 @@ public:
 public slots:
     void Actualizar();
     void GenerarAvion();
+    void LanzarBomba(int x, int y, bool MPositivo);
 };
 
 #endif // NIVEL2_H

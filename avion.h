@@ -13,8 +13,8 @@ class avion : public QWidget
 private:
     short int Vida;
     QGraphicsPixmapItem* Imagen;
-    QTimer* TiempoMover;
     int PosicionLanzamiento;
+    QTimer* TiempoMover;
     bool BombaLanzada;
     bool DireccionPositiva;
 
@@ -23,12 +23,15 @@ public:
 
     short int GetVida();
     QGraphicsPixmapItem* GetImagen();
+    bool GetDireccionPositiva();
+
+    ~avion();
 
 public slots:
     void Mover();
 
 signals:
-    void Lanzamiento();
+    void Lanzamiento(int, int, bool);
 };
 
 #endif // AVION_H
