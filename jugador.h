@@ -20,6 +20,8 @@ public:
     void SeMueveIzquierda();
     void NoMover();
 
+    void Disparar();
+
 public slots:
     void Animar();
 };

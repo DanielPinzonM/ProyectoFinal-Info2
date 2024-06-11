@@ -58,11 +58,17 @@ void jugador::NoMover()
     MueveIzquierda = false;
 }
 
+void jugador::Disparar()
+{
+    Imagen->setPixmap(QPixmap("Recursos/SoldadoDisparar.png"));
+    Imagen->setTransform(QTransform().translate(-30, 0).scale(1, 1), false);
+}
+
 void jugador::Animar()
 {
     if(MueveDerecha == true || MueveIzquierda == true)
     {
-        if(Imagen->pixmap().toImage() == QPixmap("Recursos/Soldado.png").toImage())
+        if(Imagen->pixmap().toImage() == QPixmap("Recursos/Soldado.png").toImage() || Imagen->pixmap().toImage() == QPixmap("Recursos/SoldadoDisparar.png").toImage())
         {
             Imagen->setPixmap(QPixmap("Recursos/Soldado1.png"));
         }

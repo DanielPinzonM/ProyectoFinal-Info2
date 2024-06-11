@@ -122,9 +122,23 @@ void Nivel2::RemoverTecla(QKeyEvent* event)
     }
 }
 
+void Nivel2::EventoMouse(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        if(Jugador->GetMueveDerecha() == false && Jugador->GetMueveIzquierda() == false)
+        {
+            Jugador->Disparar();
+            Proyectiles.append(new QGraphicsLineItem(Jugador->GetPosicionX()-10, Jugador->GetPosicionY()+30, Jugador->GetPosicionX()-1, Jugador->GetPosicionY()+30));
+            Proyectiles.last()->setPen(QPen(Qt::yellow));
+            Escena->addItem(Proyectiles.last());
+        }
+    }
+}
+
 void Nivel2::Actualizar()
 {
-    if(Jugador->GetVida() <= -1000)
+    if(Jugador->GetVida() <= 0)
     {
         qDebug() << "Murio";
     }
@@ -241,6 +255,11 @@ void Nivel2::Actualizar()
         }
     }
 
+    for(QGraphicsLineItem* Proyectil : Proyectiles)
+    {
+        Proyectil->setPos(Proyectil->pos().x()-9, Proyectil->pos().y());
+    }
+
     for(avion* Avion : Aviones)
     {
         if(Avion->GetDireccionPositiva() == true)
@@ -281,14 +300,18 @@ void Nivel2::Actualizar()
     {
         if(Bomba->GetImagen()->pos().y() > 580)
         {
-            if(Jugador->GetPosicionX() < Bomba->GetImagen()->pos().x()+100 && Jugador->GetPosicionX() > Bomba->GetImagen()->pos().x()-100)
+            Explosiones.append(new explosion(Bomba->GetImagen()->pos().x(),Bomba->GetImagen()->pos().y()));
+            Escena->addItem(Explosiones.last()->GetImagen());
+            connect(Explosiones.last(), SIGNAL(Disipado(explosion*)), this, SLOT(DisiparExplosion(explosion*)));
+
+            if(Jugador->GetPosicionX() > Explosiones.last()->GetImagen()->pos().x() && Jugador->GetPosicionX() < Explosiones.last()->GetImagen()->pos().x()+Explosiones.last()->GetImagen()->boundingRect().width())
             {
-                qDebug() << "Danio recibido";
+                qDebug() << "Danio recibido I";
                 Jugador->SetVida(Jugador->GetVida()-40);
             }
-            else if(Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().x() < Bomba->GetImagen()->pos().x()+100 && Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().x() > Bomba->GetImagen()->pos().x()-100)
+            else if(Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().width() > Explosiones.last()->GetImagen()->pos().x() && Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().width() < Explosiones.last()->GetImagen()->pos().x()+Explosiones.last()->GetImagen()->boundingRect().width())
             {
-                qDebug() << "Danio recibido";
+                qDebug() << "Danio recibido D";
                 Jugador->SetVida(Jugador->GetVida()-40);
             }
 
@@ -327,15 +350,13 @@ void Nivel2::GenerarAvion()
 
 void Nivel2::LanzarBomba(int x, int y, bool MPositivo)
 {
-    if(MPositivo == true)
-    {
-        qDebug() << "Lanzamiento en X=" << x << " - Y=" << y << " con movimiento positivo";
-    }
-    else
-    {
-        qDebug() << "Lanzamiento en X=" << x << " - Y=" << y << " con movimiento negativo";
-    }
-
     Bombas.append(new bomba(x,y,MPositivo));
     Escena->addItem(Bombas.last()->GetImagen());
+}
+
+void Nivel2::DisiparExplosion(explosion* Explosion)
+{
+    Explosiones.removeOne(Explosion);
+    Escena->removeItem(Explosion->GetImagen());
+    Explosion->deleteLater();
 }
