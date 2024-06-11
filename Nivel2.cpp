@@ -38,9 +38,11 @@ Nivel2::Nivel2()
     ExtremoDerecho = 1100 - int(Jugador->GetImagen()->boundingRect().width());
     ExtremoIzquierdo = 100;
 
+    TiempoAvion = 3000;
+
     EsperaAvion = new QTimer();
     connect(EsperaAvion, SIGNAL(timeout()), this, SLOT(GenerarAvion()));
-    EsperaAvion->start(5000);
+    EsperaAvion->start(TiempoAvion);
 
     Refresco = new QTimer();
     connect(Refresco, SIGNAL(timeout()), this, SLOT(Actualizar()));
@@ -122,11 +124,21 @@ void Nivel2::RemoverTecla(QKeyEvent* event)
 
 void Nivel2::Actualizar()
 {
+    if(Jugador->GetVida() <= -1000)
+    {
+        qDebug() << "Murio";
+    }
+
+    if(Jugador->GetPosicionX() > 7020)
+    {
+        qDebug() << "Gano";
+    }
+
     if(!(Keys.empty()))
     {
         if(Keys.contains(Qt::Key_D))
         {
-            Jugador->SetPosicion(Jugador->GetPosicionX()+3, Jugador->GetPosicionY());
+            Jugador->SetPosicion(Jugador->GetPosicionX()+2, Jugador->GetPosicionY());
 
             if(Jugador->GetMueveDerecha() == false)
             {
@@ -135,7 +147,7 @@ void Nivel2::Actualizar()
         }
         if(Keys.contains(Qt::Key_A))
         {
-            Jugador->SetPosicion(Jugador->GetPosicionX()-3, Jugador->GetPosicionY());
+            Jugador->SetPosicion(Jugador->GetPosicionX()-2, Jugador->GetPosicionY());
 
             if(Jugador->GetMueveIzquierda() == false)
             {
@@ -186,7 +198,7 @@ void Nivel2::Actualizar()
                     if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+60)
                     {
                         colision = true;
-                        Jugador->SetPosicion(Jugador->GetPosicionX()-3, Jugador->GetPosicionY());
+                        Jugador->SetPosicion(Jugador->GetPosicionX()-2, Jugador->GetPosicionY());
                         Jugador->GetImagen()->setZValue(1);
                     }
                     else
@@ -202,7 +214,7 @@ void Nivel2::Actualizar()
                     if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+60)
                     {
                         colision = true;
-                        Jugador->SetPosicion(Jugador->GetPosicionX()+3, Jugador->GetPosicionY());
+                        Jugador->SetPosicion(Jugador->GetPosicionX()+2, Jugador->GetPosicionY());
                         Jugador->GetImagen()->setZValue(-1);
                     }
                     else
@@ -233,33 +245,76 @@ void Nivel2::Actualizar()
     {
         if(Avion->GetDireccionPositiva() == true)
         {
-            if(Avion->GetImagen()->pos().x() > Escena->sceneRect().x()+1300)
+            if(Avion->GetImagen()->pos().x() > Escena->sceneRect().x()+1400)
             {
                 Escena->removeItem(Avion->GetImagen());
                 Aviones.removeOne(Avion);
                 Avion->disconnect(Avion, SIGNAL(Lanzamiento(int,int,bool)), this, SLOT(LanzarBomba(int,int,bool)));
                 Avion->~avion();
+
+                if(TiempoAvion > 500)
+                {
+                    TiempoAvion -= 200;
+                    EsperaAvion->start(TiempoAvion);
+                }
             }
         }
         else
         {
-            if(Avion->GetImagen()->pos().x() < Escena->sceneRect().x()-100)
+            if(Avion->GetImagen()->pos().x() < Escena->sceneRect().x()-200)
             {
                 Escena->removeItem(Avion->GetImagen());
                 Aviones.removeOne(Avion);
                 Avion->disconnect(Avion, SIGNAL(Lanzamiento(int,int,bool)), this, SLOT(LanzarBomba(int,int,bool)));
                 Avion->~avion();
+
+                if(TiempoAvion > 500)
+                {
+                    TiempoAvion -= 200;
+                    EsperaAvion->start(TiempoAvion);
+                }
             }
+        }
+    }
+
+    for(bomba* Bomba : Bombas)
+    {
+        if(Bomba->GetImagen()->pos().y() > 580)
+        {
+            if(Jugador->GetPosicionX() < Bomba->GetImagen()->pos().x()+100 && Jugador->GetPosicionX() > Bomba->GetImagen()->pos().x()-100)
+            {
+                qDebug() << "Danio recibido";
+                Jugador->SetVida(Jugador->GetVida()-40);
+            }
+            else if(Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().x() < Bomba->GetImagen()->pos().x()+100 && Jugador->GetPosicionX()+Jugador->GetImagen()->boundingRect().x() > Bomba->GetImagen()->pos().x()-100)
+            {
+                qDebug() << "Danio recibido";
+                Jugador->SetVida(Jugador->GetVida()-40);
+            }
+
+            Escena->removeItem(Bomba->GetImagen());
+            Bombas.removeOne(Bomba);
+            Bomba->~bomba();
         }
     }
 
     if(Jugador->GetPosicionX() > Escena->sceneRect().x()+1000 && Escena->sceneRect().x() < 5768)
     {
-        Escena->setSceneRect(Escena->sceneRect().x()+3,0,1,1);
+        Escena->setSceneRect(Escena->sceneRect().x()+2,0,1,1);
+
+        for(avion* Avion : Aviones)
+        {
+            Avion->DesplazarLanzamiento(2);
+        }
     }
     else if(Jugador->GetPosicionX() < Escena->sceneRect().x()+200 && Escena->sceneRect().x() > 100)
     {
-        Escena->setSceneRect(Escena->sceneRect().x()-3,0,1,1);
+        Escena->setSceneRect(Escena->sceneRect().x()-2,0,1,1);
+
+        for(avion* Avion : Aviones)
+        {
+            Avion->DesplazarLanzamiento(-2);
+        }
     }
 }
 
@@ -280,4 +335,7 @@ void Nivel2::LanzarBomba(int x, int y, bool MPositivo)
     {
         qDebug() << "Lanzamiento en X=" << x << " - Y=" << y << " con movimiento negativo";
     }
+
+    Bombas.append(new bomba(x,y,MPositivo));
+    Escena->addItem(Bombas.last()->GetImagen());
 }

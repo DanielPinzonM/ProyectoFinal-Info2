@@ -13,16 +13,17 @@ avion::avion(int ExtremoIzquierdo, int ExtremoDerecho)
     if(PosicionLanzamiento == 1)
     {
         Imagen->setPos(ExtremoDerecho+100, 50);
+        PosicionLanzamiento = QRandomGenerator::global()->bounded(ExtremoIzquierdo+800, ExtremoDerecho+200);
         DireccionPositiva = false;
     }
     else if(PosicionLanzamiento == 2)
     {
         Imagen->setPos(ExtremoIzquierdo-100, 50);
         Imagen->setTransform(QTransform().translate(60, 0).scale(-1, 1), false);
+        PosicionLanzamiento = QRandomGenerator::global()->bounded(ExtremoIzquierdo+300, ExtremoDerecho-100);
         DireccionPositiva = true;
     }
 
-    PosicionLanzamiento = QRandomGenerator::global()->bounded(ExtremoIzquierdo, ExtremoDerecho);
     BombaLanzada = false;
 
     TiempoMover = new QTimer();
@@ -43,6 +44,11 @@ QGraphicsPixmapItem* avion::GetImagen()
 bool avion::GetDireccionPositiva()
 {
     return DireccionPositiva;
+}
+
+void avion::DesplazarLanzamiento(short int c)
+{
+    PosicionLanzamiento += c;
 }
 
 void avion::Mover()

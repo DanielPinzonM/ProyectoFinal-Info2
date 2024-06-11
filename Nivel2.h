@@ -11,6 +11,7 @@
 #include <QRandomGenerator>
 #include "jugador.h"
 #include "avion.h"
+#include "bomba.h"
 
 class Nivel2 : public QWidget
 {
@@ -25,7 +26,9 @@ private:
     QTimer* Refresco;
     QTimer* EsperaAvion;
     QList<avion*> Aviones;
+    QList<bomba*> Bombas;
     QList<QGraphicsPixmapItem*> Barricadas;
+    short int TiempoAvion;
     bool colision = false;
 
 public:

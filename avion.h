@@ -25,6 +25,8 @@ public:
     QGraphicsPixmapItem* GetImagen();
     bool GetDireccionPositiva();
 
+    void DesplazarLanzamiento(short int c);
+
     ~avion();
 
 public slots:
