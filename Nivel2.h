@@ -11,6 +11,7 @@
 #include <QRandomGenerator>
 #include <QGraphicsLineItem>
 #include "jugador.h"
+#include "enemigo.h"
 #include "avion.h"
 #include "bomba.h"
 #include "explosion.h"
@@ -28,11 +29,14 @@ private:
     jugador* Jugador;
     QTimer* Refresco;
     QTimer* EsperaAvion;
+    QTimer* EsperaEnemigos;
     QList<avion*> Aviones;
     QList<bomba*> Bombas;
     QList<explosion*> Explosiones;
     QList<QGraphicsPixmapItem*> Barricadas;
     QList<proyectil*> Proyectiles;
+    QList<proyectil*> ProyectilesEnemigos;
+    QList<enemigo*> Enemigos;
     short int TiempoAvion;
     bool colision = false;
 
@@ -50,6 +54,8 @@ public slots:
     void LanzarBomba(int x, int y, bool MPositivo);
     void DisiparExplosion(explosion*);
     void EliminarProyectil(proyectil*);
+    void GenerarEnemigos();
+    void ProyectilEnemigo(short int x, short int y);
 };
 
 #endif // NIVEL2_H

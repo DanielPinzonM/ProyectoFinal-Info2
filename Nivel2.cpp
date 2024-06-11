@@ -44,6 +44,10 @@ Nivel2::Nivel2()
     connect(EsperaAvion, SIGNAL(timeout()), this, SLOT(GenerarAvion()));
     EsperaAvion->start(TiempoAvion);
 
+    EsperaEnemigos = new QTimer();
+    connect(EsperaEnemigos, SIGNAL(timeout()), this, SLOT(GenerarEnemigos()));
+    EsperaEnemigos->start(6000);
+
     Refresco = new QTimer();
     connect(Refresco, SIGNAL(timeout()), this, SLOT(Actualizar()));
     Refresco->start(16);
@@ -147,6 +151,16 @@ void Nivel2::Actualizar()
     if(Jugador->GetPosicionX() > 7020)
     {
         qDebug() << "Gano";
+    }
+
+    for(enemigo* Enemigo : Enemigos)
+    {
+        if(Enemigo->GetVida() <= 0)
+        {
+            Escena->removeItem(Enemigo->GetImagen());
+            Enemigos.removeOne(Enemigo);
+            Enemigo->deleteLater();
+        }
     }
 
     if(!(Keys.empty()))
@@ -265,11 +279,71 @@ void Nivel2::Actualizar()
                 }
             }
         }
+
+        for(proyectil* ProyectilEnemigo : ProyectilesEnemigos)
+        {
+            if(ProyectilEnemigo->GetImagen()->pos().x() > Barricada->pos().x()+10 && ProyectilEnemigo->GetImagen()->pos().x() < Barricada->pos().x()+Barricada->boundingRect().width()-10)
+            {
+                if(ProyectilEnemigo->GetImagen()->pos().y() > Barricada->pos().y()+5 && ProyectilEnemigo->GetImagen()->pos().y() < Barricada->pos().y()+Barricada->boundingRect().height()-5)
+                {
+                    ProyectilEnemigo->Rebotar();
+                }
+            }
+        }
+    }
+
+
+    for(enemigo* Enemigo : Enemigos)
+    {
+        if(Enemigo->GetImagen()->pos().x() < Jugador->GetImagen()->pos().x()-500)
+        {
+            qDebug() << "Frena";
+
+            if(Enemigo->GetVelocidad() != 4)
+            {
+                Enemigo->SetVelocidad(4);
+            }
+        }
+        else if(Enemigo->GetImagen()->pos().x() > Jugador->GetImagen()->pos().x()-500)
+        {
+            if(Enemigo->GetVelocidad() != 2)
+            {
+                Enemigo->SetVelocidad(2);
+            }
+        }
     }
 
     for(proyectil* Proyectil : Proyectiles)
     {
+        for(enemigo* Enemigo : Enemigos)
+        {
+            if(Proyectil->GetImagen()->pos().x() > Enemigo->GetImagen()->pos().x() && Proyectil->GetImagen()->pos().x() < Enemigo->GetImagen()->pos().x()+60)
+            {
+                if(Proyectil->GetImagen()->pos().y() > Enemigo->GetImagen()->pos().y() && Proyectil->GetImagen()->pos().y() < Enemigo->GetImagen()->pos().y()+Enemigo->GetImagen()->boundingRect().height()-10)
+                {
+                    qDebug() << "Enemy";
+                    Enemigo->SetVida(Enemigo->GetVida()-25);
+                    Escena->removeItem(Proyectil->GetImagen());
+                    Proyectiles.removeOne(Proyectil);
+                    Proyectil->deleteLater();
+                }
+            }
+        }
+    }
 
+    for(proyectil* ProyectilEnemigo : ProyectilesEnemigos)
+    {
+        if(ProyectilEnemigo->GetImagen()->pos().x() > Jugador->GetImagen()->pos().x() && ProyectilEnemigo->GetImagen()->pos().x() < Jugador->GetImagen()->pos().x()+Jugador->GetImagen()->boundingRect().width())
+        {
+            if(ProyectilEnemigo->GetImagen()->pos().y() > Jugador->GetImagen()->pos().y()+15 && ProyectilEnemigo->GetImagen()->pos().y() < Jugador->GetImagen()->pos().y()+Jugador->GetImagen()->boundingRect().width()-15)
+            {
+                qDebug() << "Recibe Disparo";
+                Jugador->SetVida(Jugador->GetVida()-10);
+                ProyectilesEnemigos.removeOne(ProyectilEnemigo);
+                Escena->removeItem(ProyectilEnemigo->GetImagen());
+                ProyectilEnemigo->deleteLater();
+            }
+        }
     }
 
     for(avion* Avion : Aviones)
@@ -285,7 +359,7 @@ void Nivel2::Actualizar()
 
                 if(TiempoAvion > 500)
                 {
-                    TiempoAvion -= 200;
+                    TiempoAvion -= 50;
                     EsperaAvion->start(TiempoAvion);
                 }
             }
@@ -301,7 +375,7 @@ void Nivel2::Actualizar()
 
                 if(TiempoAvion > 500)
                 {
-                    TiempoAvion -= 200;
+                    TiempoAvion -= 50;
                     EsperaAvion->start(TiempoAvion);
                 }
             }
@@ -375,7 +449,32 @@ void Nivel2::DisiparExplosion(explosion* Explosion)
 
 void Nivel2::EliminarProyectil(proyectil* Proyectil)
 {
-    Proyectiles.removeOne(Proyectil);
+    if(Proyectiles.contains(Proyectil))
+    {
+        Proyectiles.removeOne(Proyectil);
+    }
+    else
+    {
+        ProyectilesEnemigos.removeOne(Proyectil);
+    }
+
     Escena->removeItem(Proyectil->GetImagen());
     Proyectil->deleteLater();
+}
+
+void Nivel2::GenerarEnemigos()
+{
+    for(short int i=0; i<1; i++)
+    {
+        Enemigos.append(new enemigo(Escena->sceneRect().x()-100, Escena->sceneRect().y()+500, Escena->sceneRect().y()+575));
+        Escena->addItem(Enemigos.last()->GetImagen());
+        connect(Enemigos.last(), SIGNAL(Disparando(short int, short int)), this, SLOT(ProyectilEnemigo(short int, short int)));
+    }
+}
+
+void Nivel2::ProyectilEnemigo(short int x, short int y)
+{
+    ProyectilesEnemigos.append(new proyectil(x, y, true));
+    connect(ProyectilesEnemigos.last(), SIGNAL(TerminarVuelo(proyectil*)), this, SLOT(EliminarProyectil(proyectil*)));
+    Escena->addItem(ProyectilesEnemigos.last()->GetImagen());
 }
