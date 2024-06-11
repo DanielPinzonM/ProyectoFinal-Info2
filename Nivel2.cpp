@@ -129,9 +129,10 @@ void Nivel2::EventoMouse(QMouseEvent *event)
         if(Jugador->GetMueveDerecha() == false && Jugador->GetMueveIzquierda() == false)
         {
             Jugador->Disparar();
-            Proyectiles.append(new QGraphicsLineItem(Jugador->GetPosicionX()-10, Jugador->GetPosicionY()+30, Jugador->GetPosicionX()-1, Jugador->GetPosicionY()+30));
-            Proyectiles.last()->setPen(QPen(Qt::yellow));
-            Escena->addItem(Proyectiles.last());
+
+            Proyectiles.append(new proyectil(Jugador->GetPosicionX()-20, Jugador->GetPosicionY()+20, false));
+            connect(Proyectiles.last(), SIGNAL(TerminarVuelo(proyectil*)), this, SLOT(EliminarProyectil(proyectil*)));
+            Escena->addItem(Proyectiles.last()->GetImagen());
         }
     }
 }
@@ -209,7 +210,7 @@ void Nivel2::Actualizar()
             {
                 if(Jugador->GetPosicionX()+20 > Barricada->pos().x() && Jugador->GetPosicionX()+20 < Barricada->pos().x()+Barricada->boundingRect().width())
                 {
-                    if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+60)
+                    if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+55)
                     {
                         colision = true;
                         Jugador->SetPosicion(Jugador->GetPosicionX()-2, Jugador->GetPosicionY());
@@ -225,7 +226,7 @@ void Nivel2::Actualizar()
             {
                 if(Jugador->GetPosicionX()+20 > Barricada->pos().x() && Jugador->GetPosicionX()+20 < Barricada->pos().x()+Barricada->boundingRect().width())
                 {
-                    if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+60)
+                    if(Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() <= Barricada->pos().y()+Barricada->boundingRect().height()+10 && Jugador->GetPosicionY()+Jugador->GetImagen()->boundingRect().height() >= Barricada->pos().y()+55)
                     {
                         colision = true;
                         Jugador->SetPosicion(Jugador->GetPosicionX()+2, Jugador->GetPosicionY());
@@ -253,11 +254,22 @@ void Nivel2::Actualizar()
                 }
             }
         }
+
+        for(proyectil* Proyectil : Proyectiles)
+        {
+            if(Proyectil->GetImagen()->pos().x() > Barricada->pos().x()+10 && Proyectil->GetImagen()->pos().x() < Barricada->pos().x()+Barricada->boundingRect().width()-10)
+            {
+                if(Proyectil->GetImagen()->pos().y() > Barricada->pos().y()+5 && Proyectil->GetImagen()->pos().y() < Barricada->pos().y()+Barricada->boundingRect().height()-40)
+                {
+                    Proyectil->Rebotar();
+                }
+            }
+        }
     }
 
-    for(QGraphicsLineItem* Proyectil : Proyectiles)
+    for(proyectil* Proyectil : Proyectiles)
     {
-        Proyectil->setPos(Proyectil->pos().x()-9, Proyectil->pos().y());
+
     }
 
     for(avion* Avion : Aviones)
@@ -359,4 +371,11 @@ void Nivel2::DisiparExplosion(explosion* Explosion)
     Explosiones.removeOne(Explosion);
     Escena->removeItem(Explosion->GetImagen());
     Explosion->deleteLater();
+}
+
+void Nivel2::EliminarProyectil(proyectil* Proyectil)
+{
+    Proyectiles.removeOne(Proyectil);
+    Escena->removeItem(Proyectil->GetImagen());
+    Proyectil->deleteLater();
 }

@@ -14,6 +14,7 @@
 #include "avion.h"
 #include "bomba.h"
 #include "explosion.h"
+#include "proyectil.h"
 
 class Nivel2 : public QWidget
 {
@@ -31,7 +32,7 @@ private:
     QList<bomba*> Bombas;
     QList<explosion*> Explosiones;
     QList<QGraphicsPixmapItem*> Barricadas;
-    QList<QGraphicsLineItem*> Proyectiles;
+    QList<proyectil*> Proyectiles;
     short int TiempoAvion;
     bool colision = false;
 
@@ -48,6 +49,7 @@ public slots:
     void GenerarAvion();
     void LanzarBomba(int x, int y, bool MPositivo);
     void DisiparExplosion(explosion*);
+    void EliminarProyectil(proyectil*);
 };
 
 #endif // NIVEL2_H
