@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QRandomGenerator>
 #include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
 #include "jugador.h"
 #include "enemigo.h"
 #include "avion.h"
@@ -38,15 +39,22 @@ private:
     QList<proyectil*> ProyectilesEnemigos;
     QList<enemigo*> Enemigos;
     short int TiempoAvion;
+    QGraphicsTextItem* MarcadorVida;
     bool colision = false;
+    bool Derrotado;
+    bool Victorioso;
+    QGraphicsPixmapItem* Aviso;
 
 public:
     Nivel2();
     QGraphicsScene* getEscena();
 
+    void CrearMarcador();
+    void Iniciar();
     void AgregarTecla(QKeyEvent* event);
     void RemoverTecla(QKeyEvent* event);
     void EventoMouse(QMouseEvent* event);
+    void LimpiarEscena();
 
 public slots:
     void Actualizar();
@@ -56,6 +64,8 @@ public slots:
     void EliminarProyectil(proyectil*);
     void GenerarEnemigos();
     void ProyectilEnemigo(short int x, short int y);
+    void Victoria();
+    void Derrota();
 };
 
 #endif // NIVEL2_H

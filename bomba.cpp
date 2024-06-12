@@ -24,14 +24,14 @@ void bomba::Mover()
 {
     if(DireccionPositiva == true)
     {
-        Imagen->setPos(Imagen->pos().x()+5, Imagen->pos().y()+VelocidadY);
+        Imagen->setPos(Imagen->pos().x()+3, Imagen->pos().y()+VelocidadY);
     }
     else
     {
-        Imagen->setPos(Imagen->pos().x()-5, Imagen->pos().y()+VelocidadY);
+        Imagen->setPos(Imagen->pos().x()-3, Imagen->pos().y()+VelocidadY);
     }
 
-    VelocidadY += 0.16;
+    VelocidadY += 0.08;
 }
 
 bomba::~bomba()

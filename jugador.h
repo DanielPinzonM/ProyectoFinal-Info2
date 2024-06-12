@@ -21,6 +21,7 @@ public:
     void NoMover();
 
     void Disparar();
+    void Derrotado();
 
 public slots:
     void Animar();

@@ -64,6 +64,12 @@ void jugador::Disparar()
     Imagen->setTransform(QTransform().translate(-30, 0).scale(1, 1), false);
 }
 
+void jugador::Derrotado()
+{
+    TiempoAnimar->stop();
+    Imagen->setPixmap(QPixmap("Recursos/SoldadoCaido.png"));
+}
+
 void jugador::Animar()
 {
     if(MueveDerecha == true || MueveIzquierda == true)
