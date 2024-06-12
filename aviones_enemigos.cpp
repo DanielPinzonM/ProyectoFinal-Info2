@@ -2,7 +2,8 @@
 
 Aviones_Enemigos::Aviones_Enemigos()
 {
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\avion.png"));
+
+    Imagen = new QGraphicsPixmapItem(QPixmap("IMAGENES/avion.png"));
     Imagen->setScale(1); // Reducir la escala de la imagen
     Imagen->setPos(0,-100);
     tiempomover= new QTimer();

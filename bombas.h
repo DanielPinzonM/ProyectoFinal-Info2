@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QRandomGenerator>
 
+
 class bombas:public QObject
 {
     Q_OBJECT

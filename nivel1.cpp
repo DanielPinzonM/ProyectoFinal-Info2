@@ -7,7 +7,7 @@ Nivel1::Nivel1()
 
     Escena = new QGraphicsScene;
     Escena->setSceneRect(0,0,1,1);
-    Fondo = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Downloads\\ivan-bandura-wQ00u_Un8Og-unsplash.jpg"));
+    Fondo = new QGraphicsPixmapItem(QPixmap("IMAGENES/ivan-bandura-wQ00u_Un8Og-unsplash.jpg"));
     Escena->addItem(Fondo);
     Fondo->setPos(0,-3342);
     barco = new Barco();
@@ -282,7 +282,7 @@ void Nivel1::Actualizarjuego()
         }
 
 
-        Fondofinal = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Downloads\\fin del juego.jpg"));
+        Fondofinal = new QGraphicsPixmapItem(QPixmap("IMAGENES/fin del juego.jpg"));
         Escena->addItem(Fondofinal);
         Fondofinal->setPos(0,0);
         Fondofinal->setZValue(1);
@@ -304,6 +304,42 @@ void Nivel1::Actualizarjuego()
 
 
 }
+Nivel1::~Nivel1()
+
+{
+    // Detener todos los QTimer si están activos
+    Actualizar.stop();
+    tiempocreacionbarco.stop();
+    tiempocreacionavion.stop();
+    tiempocreacionbomba.stop();
+
+    // Eliminar todos los objetos creados dinámicamente y limpiar las listas
+    delete barco;
+    for (Barco_aliado* barcoAliado : barcosaliados) {
+        delete barcoAliado;
+    }
+    for (QGraphicsRectItem* pared : Paredes) {
+        delete pared;
+    }
+    for (Aviones_Enemigos* avion : aviones) {
+        delete avion;
+    }
+    for (bombas* bomba : bombasE) {
+        delete bomba;
+    }
+
+    // Limpiar las listas
+    barcosaliados.clear();
+    Paredes.clear();
+    aviones.clear();
+    bombasE.clear();
+
+    // Eliminar objetos de la escena
+    delete Fondo;
+    delete Fondofinal;
+    delete Escena;
+}
+
 
 
 

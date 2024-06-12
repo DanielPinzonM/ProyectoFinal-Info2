@@ -16,6 +16,7 @@
 #include <QGraphicsTextItem>
 #include <QMessageBox>
 
+
 class Nivel1 : public QObject {
 
     Q_OBJECT
@@ -45,6 +46,7 @@ public:
     void Mostrarvida();
     void manejarColisiones();
     void aumentarFrecuenciaCreacion();
+    ~Nivel1();
 signals:
 
     void juegoTerminado();

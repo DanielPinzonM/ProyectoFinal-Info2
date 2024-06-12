@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.2, 2024-06-11T13:32:37. -->
+<!-- Written by QtCreator 11.0.2, 2024-06-12T01:21:13. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -247,6 +247,7 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseTerminal">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory">C:/Users/NICOLAS/Documents/NIVEL1</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/NICOLAS/Documents/build-NIVEL1-Desktop_Qt_5_15_2_MinGW_64_bit-Debug</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>

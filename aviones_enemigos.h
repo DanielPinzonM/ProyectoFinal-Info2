@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QRandomGenerator>
 
+
 class Aviones_Enemigos:public QObject
 {
     Q_OBJECT

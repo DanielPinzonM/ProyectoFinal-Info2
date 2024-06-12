@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include "nivel1.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

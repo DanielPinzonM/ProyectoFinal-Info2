@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 
+
 class Barco : public QObject {
     Q_OBJECT
 private:

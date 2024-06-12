@@ -4,7 +4,7 @@ Barco_aliado::Barco_aliado()
 {
     QString numerobarcoimg;
     numerobarcoimg = QRandomGenerator::global()->bounded(49,53);
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\barcoaliado" + numerobarcoimg + ".png"));
+    Imagen = new QGraphicsPixmapItem(QPixmap("IMAGENES/barcoaliado" + numerobarcoimg + ".png"));
     Imagen->setScale(1); // Reducir la escala de la imagen
     Imagen->setPos(qreal(QRandomGenerator::global()->bounded(0, 1200)),-150);
     tiempomover= new QTimer();

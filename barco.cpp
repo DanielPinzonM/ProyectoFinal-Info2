@@ -1,7 +1,7 @@
 #include "barco.h"
 
 Barco::Barco() {
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\barcojugable.png"));
+    Imagen = new QGraphicsPixmapItem(QPixmap("IMAGENES/barcojugable.png"));
     Imagen->setScale(1);
 
 }
