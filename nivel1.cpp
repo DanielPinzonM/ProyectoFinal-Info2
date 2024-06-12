@@ -315,17 +315,27 @@ Nivel1::~Nivel1()
 
     // Eliminar todos los objetos creados dinámicamente y limpiar las listas
     delete barco;
-    for (Barco_aliado* barcoAliado : barcosaliados) {
-        delete barcoAliado;
+    for (int i = 0; i < barcosaliados.length(); i++)
+    {
+        Escena->removeItem(barcosaliados[i]->GetImagen());
+        delete barcosaliados[i];
+        barcosaliados.removeAt(i);
     }
-    for (QGraphicsRectItem* pared : Paredes) {
-        delete pared;
+
+
+    for (int i = 0; i < aviones.length(); i++)
+    {
+        Escena->removeItem(aviones[i]->GetImagen());
+        delete aviones[i];
+        aviones.removeAt(i);
     }
-    for (Aviones_Enemigos* avion : aviones) {
-        delete avion;
-    }
-    for (bombas* bomba : bombasE) {
-        delete bomba;
+
+
+    for (int i = 0; i < bombasE.length(); i++)
+    {
+        Escena->removeItem(bombasE[i]->GetImagen());
+        delete bombasE[i];
+        bombasE.removeAt(i);
     }
 
     // Limpiar las listas
