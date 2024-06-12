@@ -2,7 +2,7 @@
 
 explosion::explosion(short int x, short int y)
 {
-    Imagen = new QGraphicsPixmapItem(QPixmap("Recursos/ExplosionA.png"));
+    Imagen = new QGraphicsPixmapItem(QPixmap("Recursos/Explosion.png"));
     Imagen->setScale(1);
     Imagen->setPos(x-40, y-80);
 

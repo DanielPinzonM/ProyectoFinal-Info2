@@ -3,7 +3,7 @@
 
 Nivel2::Nivel2()
 {
-    Escena->setBackgroundBrush(QImage("Recursos/Fondo1.png"));
+    Escena->setBackgroundBrush(QImage("Recursos/Fondo.png"));
 
     Jugador = new jugador();
     Escena->addItem(Jugador->GetImagen());
@@ -545,7 +545,7 @@ void Nivel2::Actualizar()
 
     if(Jugador->GetPosicionX() > Escena->sceneRect().x()+1000 && Escena->sceneRect().x() < 5768)
     {
-        Escena->setSceneRect(Escena->sceneRect().x()+6,0,1,1);
+        Escena->setSceneRect(Escena->sceneRect().x()+2,0,1,1);
         MarcadorVida->setPos(MarcadorVida->pos().x()+2, MarcadorVida->pos().y());
 
         for(avion* Avion : Aviones)
