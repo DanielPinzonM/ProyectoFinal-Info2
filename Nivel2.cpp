@@ -46,7 +46,7 @@ void Nivel2::Iniciar()
 
     Escena->setSceneRect(0,0,1,1);
 
-    for(int i=350; i<7000; i+=400)
+    for(int i=350; i<7000; i+=500)
     {
         Barricadas.append(new QGraphicsPixmapItem(QPixmap("Recursos/Barricada.png")));
         Barricadas.last()->setScale(1);
@@ -134,35 +134,32 @@ void Nivel2::AgregarTecla(QKeyEvent* event)
 
 void Nivel2::RemoverTecla(QKeyEvent* event)
 {
-    if(Derrotado == false)
+    if(event->key() == Qt::Key_D)
     {
-        if(event->key() == Qt::Key_D)
+        if(!event->isAutoRepeat())
         {
-            if(!event->isAutoRepeat())
-            {
-                Keys.remove(event->key());
-            }
+            Keys.remove(event->key());
         }
-        else if(event->key() == Qt::Key_A)
+    }
+    else if(event->key() == Qt::Key_A)
+    {
+        if(!event->isAutoRepeat())
         {
-            if(!event->isAutoRepeat())
-            {
-                Keys.remove(event->key());
-            }
+            Keys.remove(event->key());
         }
-        if(event->key() == Qt::Key_W)
+    }
+    if(event->key() == Qt::Key_W)
+    {
+        if(!event->isAutoRepeat())
         {
-            if(!event->isAutoRepeat())
-            {
-                Keys.remove(event->key());
-            }
+            Keys.remove(event->key());
         }
-        else if(event->key() == Qt::Key_S)
+    }
+    else if(event->key() == Qt::Key_S)
+    {
+        if(!event->isAutoRepeat())
         {
-            if(!event->isAutoRepeat())
-            {
-                Keys.remove(event->key());
-            }
+            Keys.remove(event->key());
         }
     }
 }
@@ -252,20 +249,16 @@ void Nivel2::Actualizar()
 {
     if(Jugador->GetVida() <= 0)
     {
-        qDebug() << Jugador->GetVida();
-
         if(Derrotado == false)
         {
-            Jugador->NoMover();
+            Derrotado = true;
+
             Jugador->Derrotado();
 
             EsperaEnemigos->stop();
-            EsperaEnemigos->setSingleShot(true);
             EsperaEnemigos->disconnect(EsperaEnemigos, SIGNAL(timeout()), this, SLOT(GenerarEnemigos()));
             connect(EsperaEnemigos, SIGNAL(timeout()), this, SLOT(Derrota()));
             EsperaEnemigos->start(2000);
-
-            Derrotado = true;
         }
     }
 
@@ -298,7 +291,7 @@ void Nivel2::Actualizar()
         }
     }
 
-    if(!(Keys.empty()))
+    if(!(Keys.empty()) && Derrotado == false && Victorioso == false)
     {
         if(Keys.contains(Qt::Key_D))
         {
@@ -347,7 +340,10 @@ void Nivel2::Actualizar()
     {
         if(Jugador->GetMueveDerecha() != false || Jugador->GetMueveIzquierda() != false)
         {
-            Jugador->NoMover();
+            if(Derrotado == false && Victorioso == false)
+            {
+                Jugador->NoMover();
+            }
         }
     }
 
@@ -419,7 +415,7 @@ void Nivel2::Actualizar()
         {
             if(ProyectilEnemigo->GetImagen()->pos().x() > Barricada->pos().x()+10 && ProyectilEnemigo->GetImagen()->pos().x() < Barricada->pos().x()+Barricada->boundingRect().width()-10)
             {
-                if(ProyectilEnemigo->GetImagen()->pos().y() > Barricada->pos().y()+5 && ProyectilEnemigo->GetImagen()->pos().y() < Barricada->pos().y()+Barricada->boundingRect().height()-5)
+                if(ProyectilEnemigo->GetImagen()->pos().y() > Barricada->pos().y()+15 && ProyectilEnemigo->GetImagen()->pos().y() < Barricada->pos().y()+Barricada->boundingRect().height()-15)
                 {
                     ProyectilEnemigo->Rebotar();
                 }
@@ -430,14 +426,14 @@ void Nivel2::Actualizar()
 
     for(enemigo* Enemigo : Enemigos)
     {
-        if(Enemigo->GetImagen()->pos().x() < Jugador->GetImagen()->pos().x()-500)
+        if(Enemigo->GetImagen()->pos().x() < Jugador->GetImagen()->pos().x()-400)
         {
             if(Enemigo->GetVelocidad() != 4)
             {
                 Enemigo->SetVelocidad(4);
             }
         }
-        else if(Enemigo->GetImagen()->pos().x() >= Jugador->GetImagen()->pos().x()-500 && Enemigo->GetImagen()->pos().x() <= Jugador->GetImagen()->pos().x()-200)
+        else if(Enemigo->GetImagen()->pos().x() >= Jugador->GetImagen()->pos().x()-400 && Enemigo->GetImagen()->pos().x() <= Jugador->GetImagen()->pos().x()-200)
         {
             if(Enemigo->GetVelocidad() != 2)
             {
@@ -528,7 +524,7 @@ void Nivel2::Actualizar()
             Escena->addItem(Explosiones.last()->GetImagen());
             connect(Explosiones.last(), SIGNAL(Disipado(explosion*)), this, SLOT(DisiparExplosion(explosion*)));
 
-            if(Jugador->GetPosicionX() > Explosiones.last()->GetImagen()->pos().x() && Jugador->GetPosicionX() < Explosiones.last()->GetImagen()->pos().x()+Explosiones.last()->GetImagen()->boundingRect().width())
+            if(Jugador->GetPosicionX() > Explosiones.last()->GetImagen()->pos().x() && Jugador->GetPosicionX()+10 < Explosiones.last()->GetImagen()->pos().x()+Explosiones.last()->GetImagen()->boundingRect().width())
             {
                 Jugador->SetVida(Jugador->GetVida()-40);
             }
@@ -562,6 +558,11 @@ void Nivel2::Actualizar()
         {
             Avion->DesplazarLanzamiento(-2);
         }
+    }
+
+    if(Jugador->GetPosicionX() < 0)
+    {
+        Jugador->SetPosicion(0, Jugador->GetPosicionY());
     }
 }
 
