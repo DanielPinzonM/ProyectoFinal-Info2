@@ -2,7 +2,7 @@
 
 Aviones_Enemigos::Aviones_Enemigos()
 {
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\avion.png"));
+    Imagen = new QGraphicsPixmapItem(QPixmap("Recursos/avion.png"));
     Imagen->setScale(1); // Reducir la escala de la imagen
     Imagen->setPos(0,-100);
     tiempomover= new QTimer();
@@ -10,14 +10,10 @@ Aviones_Enemigos::Aviones_Enemigos()
     connect(tiempomover,SIGNAL(timeout()), this, SLOT(mover()));
 }
 
-
 void Aviones_Enemigos::mover()
 {
-
     Imagen->setPos(Imagen->pos().x() + 2 , Imagen->pos().y() + 2);
 }
-
-
 
 QGraphicsPixmapItem *Aviones_Enemigos::GetImagen()
 {
@@ -29,4 +25,13 @@ int Aviones_Enemigos::Getdanio()
     return danio;
 }
 
+Aviones_Enemigos::~Aviones_Enemigos()
+{
+    tiempomover->stop();
+    tiempomover->disconnect(tiempomover,SIGNAL(timeout()), this, SLOT(mover()));
+    tiempomover->deleteLater();
 
+    delete Imagen;
+
+    this->deleteLater();
+}

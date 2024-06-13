@@ -16,6 +16,7 @@ public:
     Aviones_Enemigos();
     QGraphicsPixmapItem *GetImagen ();
     int Getdanio();
+    ~Aviones_Enemigos();
 public slots:
     void mover();
 };

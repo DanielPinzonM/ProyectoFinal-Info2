@@ -1,9 +1,8 @@
 #include "barco.h"
 
 Barco::Barco() {
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\barcojugable.png"));
+    Imagen = new QGraphicsPixmapItem(QPixmap("Recursos/barcojugable.png"));
     Imagen->setScale(1);
-
 }
 
 void Barco::setVida(int nuevaVida) {
@@ -20,4 +19,5 @@ QGraphicsPixmapItem *Barco::GetImagen() {
 
 Barco::~Barco() {
     delete Imagen;
+    this->deleteLater();
 }

@@ -2,7 +2,7 @@
 
 bombas::bombas()
 {
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\mina.png"));
+    Imagen = new QGraphicsPixmapItem(QPixmap("Recursos/mina.png"));
     Imagen->setScale(1); // Reducir la escala de la imagen
     Imagen->setPos(qreal(QRandomGenerator::global()->bounded(0, 1200)),-100);
     tiempomover= new QTimer();
@@ -20,12 +20,18 @@ QGraphicsPixmapItem *bombas::GetImagen()
     return Imagen;
 }
 
-bombas::~bombas()
-{
-
-}
-
 void bombas::mover()
 {
     Imagen->setPos(Imagen->pos().x(),Imagen->pos().y()+1);
+}
+
+bombas::~bombas()
+{
+    tiempomover->stop();
+    tiempomover->disconnect(tiempomover,SIGNAL(timeout()), this, SLOT(mover()));
+    tiempomover->deleteLater();
+
+    delete Imagen;
+
+    this->deleteLater();
 }

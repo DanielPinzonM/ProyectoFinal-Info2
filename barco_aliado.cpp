@@ -2,19 +2,14 @@
 
 Barco_aliado::Barco_aliado()
 {
-    QString numerobarcoimg;
-    numerobarcoimg = QRandomGenerator::global()->bounded(49,53);
-    Imagen = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Pictures\\barcoaliado" + numerobarcoimg + ".png"));
+    int numerobarcoimg;
+    numerobarcoimg = QRandomGenerator::global()->bounded(1,5);
+    Imagen = new QGraphicsPixmapItem(QPixmap("Recursos/barcoaliado" +QString(char(numerobarcoimg+48))+ ".png"));
     Imagen->setScale(1); // Reducir la escala de la imagen
     Imagen->setPos(qreal(QRandomGenerator::global()->bounded(0, 1200)),-150);
     tiempomover= new QTimer();
     tiempomover->start(16);
     connect(tiempomover,SIGNAL(timeout()), this, SLOT(mover()));
-}
-
-Barco_aliado::~Barco_aliado()
-{
-    delete Imagen;
 }
 
 int Barco_aliado::getdanio() const
@@ -33,3 +28,13 @@ void Barco_aliado::mover()
     Imagen->setPos(Imagen->pos().x(),Imagen->pos().y()+2);
 }
 
+Barco_aliado::~Barco_aliado()
+{
+    tiempomover->stop();
+    tiempomover->disconnect(tiempomover,SIGNAL(timeout()), this, SLOT(mover()));
+    tiempomover->deleteLater();
+
+    delete Imagen;
+
+    this->deleteLater();
+}
