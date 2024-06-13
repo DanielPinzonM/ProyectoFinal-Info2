@@ -1,13 +1,10 @@
 #include "nivel1.h"
 
-
-
 Nivel1::Nivel1()
 {
-
     Escena = new QGraphicsScene;
     Escena->setSceneRect(0,0,1,1);
-    Fondo = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Downloads\\ivan-bandura-wQ00u_Un8Og-unsplash.jpg"));
+    Fondo = new QGraphicsPixmapItem(QPixmap("Recursos/Fondo1.jpg"));
     Escena->addItem(Fondo);
     Fondo->setPos(0,-3342);
     barco = new Barco();
@@ -23,14 +20,11 @@ Nivel1::Nivel1()
     tiempocreacionbomba.start(5000);
     connect(&tiempocreacionbomba, &QTimer::timeout, this, &Nivel1::crearbomba);
     aumentarFrecuenciaCreacion();
-
-
 }
 
 QGraphicsScene* Nivel1::GetEscena() {
     return Escena;
 }
-
 
 void Nivel1::agregarlimites()
 {
@@ -41,8 +35,6 @@ void Nivel1::agregarlimites()
     Paredes.append(Escena->addRect(0,0,10,650,pen)); // izquierda
     Paredes.append(Escena->addRect(1190,0,10,650,pen)); // derecha
 }
-
-
 
 void Nivel1::EventoTeclado(QKeyEvent* event)
 {
@@ -56,11 +48,11 @@ void Nivel1::EventoTeclado(QKeyEvent* event)
         // Movimiento hacia la derecha
         if (barco->GetImagen()->rotation() < 20)
         {
-        pos.setX(pos.x() + 7);
+            pos.setX(pos.x() + 7);
         }
         else if(barco->GetImagen()->rotation() > 20)
         {
-        pos.setX(pos.x() + 10);
+            pos.setX(pos.x() + 10);
         }
         // Rotar el barco hacia la derecha (en sentido horario) con el ángulo de rotación más lento
         barco->GetImagen()->setRotation(barco->GetImagen()->rotation() + rotationStep);
@@ -68,11 +60,11 @@ void Nivel1::EventoTeclado(QKeyEvent* event)
     case Qt::Key_A:
         if (barco->GetImagen()->rotation() > -20)
         {
-        pos.setX(pos.x() - 7);
+            pos.setX(pos.x() - 7);
         }
         else if(barco->GetImagen()->rotation() < -20)
         {
-        pos.setX(pos.x() - 10);
+            pos.setX(pos.x() - 10);
         }
 
         barco->GetImagen()->setRotation(barco->GetImagen()->rotation() - rotationStep);
@@ -97,15 +89,13 @@ void Nivel1::EventoTeclado(QKeyEvent* event)
     }
     for (int i = 0; i < Paredes.length(); i++) {
         if (barco->GetImagen()->collidesWithItem(Paredes.at(i))) {
-        // Si hay colisión, se restaura la posición previa
-        barco->GetImagen()->setPos(prevpos);
-        break;
+            // Si hay colisión, se restaura la posición previa
+            barco->GetImagen()->setPos(prevpos);
+            break;
         }
     }
 
 }
-
-
 
 void Nivel1::crearbarco()
 {
@@ -194,8 +184,6 @@ void Nivel1::Mostrarvida()
     vidaText->setData(0, "vida");
 }
 
-
-
 void Nivel1::manejarColisiones()
 {
     // Colisiones con barcos aliados
@@ -234,18 +222,14 @@ void Nivel1::manejarColisiones()
     }
 }
 
-
 void Nivel1::aumentarFrecuenciaCreacion()
-
 {
     int tiempoCrecimiento = 3000; // Intervalo de tiempo en milisegundos para reducir la frecuencia de creación
     tiempocreacionbarco.setInterval(tiempocreacionbarco.interval() - tiempoCrecimiento);
     tiempocreacionbomba.setInterval(tiempocreacionbomba.interval() - tiempoCrecimiento);
 }
 
-
 void Nivel1::Actualizarjuego()
-
 {
     Fondo->setPos(Fondo->pos().x(),Fondo->pos().y()+1);
     Fondo->setZValue(-1);
@@ -278,22 +262,20 @@ void Nivel1::Actualizarjuego()
             Escena->removeItem(bombasE[i]->GetImagen());
             delete bombasE[i];
             bombasE.removeAt(i);
-
         }
 
-
-        Fondofinal = new QGraphicsPixmapItem(QPixmap("C:\\Users\\NICOLAS\\Downloads\\fin del juego.jpg"));
+        Fondofinal = new QGraphicsPixmapItem(QPixmap("Recursos/FinJuego.jpg"));
         Escena->addItem(Fondofinal);
         Fondofinal->setPos(0,0);
         Fondofinal->setZValue(1);
 
         if(barco->getVida() <= 0)
         {
-            QMessageBox::information(nullptr, "Fin del Juego", "PERDISTE, SUERTE PARA LA PROXIMA");
+            QMessageBox::information(nullptr, "Fin Nivel 1", "PERDISTE, SUERTE PARA LA PROXIMA");
         }
         else
         {
-            QMessageBox::information(nullptr, "Fin del Juego", "GANASTE FELICITACIONES");
+            QMessageBox::information(nullptr, "Fin Nivel 1", "FELICITACIONES");
             emit juegoTerminado();
         }
     }
@@ -301,16 +283,59 @@ void Nivel1::Actualizarjuego()
     eliminarElementosFueraDePantalla();
     manejarColisiones();
     Mostrarvida();
-
-
 }
 
+Nivel1::~Nivel1()
+{
+    Actualizar.stop();
+    Actualizar.disconnect(&Actualizar, &QTimer::timeout, this, &Nivel1::Actualizarjuego);
+    Actualizar.deleteLater();
 
+    tiempocreacionbarco.stop();
+    tiempocreacionbarco.disconnect(&tiempocreacionbarco, &QTimer::timeout, this, &Nivel1::crearbarco);
+    tiempocreacionbarco.deleteLater();
 
+    tiempocreacionavion.stop();
+    tiempocreacionavion.disconnect(&tiempocreacionavion, &QTimer::timeout, this, &Nivel1::crearavion);
+    tiempocreacionavion.deleteLater();
 
+    tiempocreacionbomba.stop();
+    tiempocreacionbomba.disconnect(&tiempocreacionbomba, &QTimer::timeout, this, &Nivel1::crearbomba);
+    tiempocreacionbomba.deleteLater();
 
+    // Eliminar todos los objetos creados dinámicamente y limpiar las listas
+    barco->~Barco();
 
+    for (Barco_aliado* barcoAliado : barcosaliados) {
+        Escena->removeItem(barcoAliado->GetImagen());
+        barcoAliado->~Barco_aliado();
+    }
+    for (QGraphicsRectItem* pared : Paredes) {
+        Escena->removeItem(pared);
+        delete pared;
+    }
+    for (Aviones_Enemigos* avion : aviones) {
+        Escena->removeItem(avion->GetImagen());
+        avion->~Aviones_Enemigos();
+    }
+    for (bombas* bomba : bombasE) {
+        Escena->removeItem(bomba->GetImagen());
+        bomba->~bombas();
+    }
 
+    // Limpiar las listas
+    barcosaliados.clear();
+    Paredes.clear();
+    aviones.clear();
+    bombasE.clear();
 
+    // Eliminar objetos de la escena
 
+    Escena->removeItem(Fondo);
+    Escena->removeItem(Fondofinal);
 
+    delete Fondo;
+    delete Fondofinal;
+
+    Escena->deleteLater();
+}

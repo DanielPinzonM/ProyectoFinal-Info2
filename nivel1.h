@@ -45,6 +45,8 @@ public:
     void Mostrarvida();
     void manejarColisiones();
     void aumentarFrecuenciaCreacion();
+    ~Nivel1();
+
 signals:
 
     void juegoTerminado();
